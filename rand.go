@@ -1,9 +1,9 @@
-// Package fastrand implements fast pesudorandom number generator
+// Package rand implements fast pesudorandom number generator
 // that should scale well on multi-CPU systems.
 //
 // Use crypto/rand instead of this package for generating
 // cryptographically secure random numbers.
-package fastrand
+package rand
 
 import (
 	"sync"
@@ -16,7 +16,7 @@ import (
 func Uint32() uint32 {
 	v := rngPool.Get()
 	if v == nil {
-		v = &RNG{}
+		v = new(RNG)
 	}
 	r := v.(*RNG)
 	x := r.Uint32()

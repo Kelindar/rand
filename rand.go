@@ -14,7 +14,7 @@ var rndn = getRandomInt32()
 
 // Uint32 returns a tread-safe, non-cryptographic pseudorandom uint32.
 func Uint32() uint32 {
-	x := uint32(atomic.AddInt32(&rndn, 13))
+	x := uint32(atomic.AddInt32(&rndn, 786433))
 
 	// https://en.wikipedia.org/wiki/Xorshift
 	x ^= x << 13

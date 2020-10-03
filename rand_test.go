@@ -1,12 +1,13 @@
 package rand
 
 import (
+	"math"
 	"testing"
 )
 
 func TestUint32(t *testing.T) {
 	m := make(map[uint32]struct{})
-	for i := 0; i < 1e6; i++ {
+	for i := 0; i < 1e3; i++ {
 		n := Uint32()
 		if _, ok := m[n]; ok {
 			t.Fatalf("number %v already exists", n)
@@ -16,47 +17,48 @@ func TestUint32(t *testing.T) {
 }
 
 func TestUint32n(t *testing.T) {
-	m := make(map[uint32]int)
-	for i := 0; i < 1e6; i++ {
-		n := Uint32n(1e2)
-		if n >= 1e2 {
-			t.Fatalf("n > 1000: %v", n)
+	const samples = 1000000
+	const bounds = 100
+
+	// Generate a distribution
+	m := make(map[int]float64)
+	for i := 0; i < samples; i++ {
+		n := Uint32n(bounds)
+		if n >= bounds {
+			t.Fatalf("n > %v: %v", n, bounds)
 		}
-		m[n]++
+
+		m[int(n)]++
 	}
 
 	// check distribution
-	avg := 1e6 / 1e2
+	// TODO: better off with a Chi square test (http://www.stat.yale.edu/Courses/1997-98/101/chigf.htm)
+	avg := float64(samples) / float64(bounds)
 	for k, v := range m {
-		p := (float64(v) - float64(avg)) / float64(avg)
-		if p < 0 {
-			p = -p
-		}
-		if p > 0.01 {
-			t.Fatalf("skew more than 1%% for k=%v: %v", k, p*100)
+		if p := math.Abs(v-avg) / avg; p > 0.05 {
+			t.Fatalf("skew more than 5%% for k=%v: %v%%", k, p*100)
 		}
 	}
 }
 
 func TestBinary(t *testing.T) {
-	m := make(map[uint32]int)
-	for i := 0; i < 1000; i++ {
-		n := Uint32n(2)
-		if n >= 2 {
-			t.Fatalf("n > 1000: %v", n)
+	const samples = 1000
+
+	// Generate a distribution
+	m := make(map[int]float64)
+	for i := 0; i < samples; i++ {
+		if n := Bool(); n == true {
+			m[0]++
+		} else {
+			m[1]++
 		}
-		m[n]++
 	}
 
 	// check distribution
-	avg := 1000 / 2
+	avg := float64(samples) / 2.0
 	for k, v := range m {
-		p := (float64(v) - float64(avg)) / float64(avg)
-		if p < 0 {
-			p = -p
-		}
-		if p > 0.01 {
-			t.Fatalf("skew more than 1%% for k=%v: %v", k, p*100)
+		if p := math.Abs(v-avg) / avg; p > 0.05 {
+			t.Fatalf("skew more than 5%% for k=%v: %v%%", k, p*100)
 		}
 	}
 }

@@ -1,3 +1,3 @@
 module github.com/kelindar/rand
 
-go 1.12
+go 1.14

@@ -4,7 +4,9 @@
 
 # rand
 
-An improved fast pseudorandom number generator based on https://github.com/valyala/fastrand.
+A simple thread-safe API for a Go implementation of Melissa O'Neill's excellent PCG pseudorandom number generator, which is well-studied, excellent, and fast both to create and in execution.
+
+This repository contains a fork of [MichaelTJones/pcg](https://github.com/MichaelTJones/pcg) code and adds a pooling of random number generators.
 
 # Features
 
@@ -16,32 +18,11 @@ An improved fast pseudorandom number generator based on https://github.com/valya
 
 
 ```
-$ GOMAXPROCS=1 go test -bench=. github.com/kelindar/rand
-goos: windows
-goarch: amd64
-pkg: github.com/kelindar/rand
-BenchmarkUint32n                200000000               8.03 ns/op
-BenchmarkMathRandInt31n         50000000                25.1 ns/op
+BenchmarkRand/Uint32-8         	566756457	         2.02 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRand/Uint32n-8        	478460296	         2.56 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRand/Float32-8        	406576479	         2.98 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRand/Uint64-8         	469784265	         2.71 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRand/Uint64n-8        	273879046	         4.50 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRand/Float64-8        	396292614	         3.10 ns/op	       0 B/op	       0 allocs/op
+BenchmarkMathRandInt31n-8   	29865824	        40.2 ns/op	       0 B/op	       0 allocs/op
 ```
-
-```
-$ GOMAXPROCS=2 go test -bench=. github.com/kelindar/rand
-goos: windows
-goarch: amd64
-pkg: github.com/kelindar/rand
-BenchmarkUint32n-2              100000000               13.4 ns/op
-BenchmarkMathRandInt31n-2       50000000                29.7 ns/op
-```
-
-```
-$ GOMAXPROCS=4 go test -bench=. github.com/kelindar/rand
-goos: windows
-goarch: amd64
-BenchmarkUint32n-4              100000000               16.0 ns/op
-BenchmarkMathRandInt31n-4       30000000                46.1 ns/op
-```
-
-As you can see, [fastrand.Uint32n](https://godoc.org/github.com/kelindar/rand#Uint32n)
-scales on multiple CPUs, while [rand.Int31n](https://golang.org/pkg/math/rand/#Int31n)
-doesn't scale. Their performance is comparable on `GOMAXPROCS=1`,
-but `rand.Uint32n` runs 2-3x faster than `rand.Int31n` on a multi-core system.

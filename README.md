@@ -1,12 +1,12 @@
 [![GoDoc](https://godoc.org/github.com/kelindar/rand?status.svg)](http://godoc.org/github.com/kelindar/rand)
 [![Go Report](https://goreportcard.com/badge/github.com/kelindar/rand)](https://goreportcard.com/report/github.com/kelindar/rand)
 
+# Rand
 
-# rand
+A simple thread-safe API for a Go implementation of Melissa O'Neill's excellent PCG pseudorandom number generator, which is well-studied, excellent, and fast both to create and in execution. This repository contains a fork of [MichaelTJones/pcg](https://github.com/MichaelTJones/pcg) code and adds a pooling of random number generators.
 
-A simple thread-safe API for a Go implementation of Melissa O'Neill's excellent PCG pseudorandom number generator, which is well-studied, excellent, and fast both to create and in execution.
+⚠️ **Alternative**: Scalable, hash-based alternative can be found in [kelindar/xxrand](https://github.com/kelindar/xxrand). 
 
-This repository contains a fork of [MichaelTJones/pcg](https://github.com/MichaelTJones/pcg) code and adds a pooling of random number generators.
 
 # Features
 
